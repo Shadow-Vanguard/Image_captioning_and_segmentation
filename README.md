@@ -6,6 +6,8 @@
 > Clone the Repository
 
   git clone https://github.com/Shadow-Vanguard/Image_captioning_and_segmentation.git
+  
+> Change Directory
   cd Image_captioning_and_segmentation
 
 
