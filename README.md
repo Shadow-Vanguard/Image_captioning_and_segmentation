@@ -53,4 +53,4 @@ uvicorn fastapi_server:app --reload
 
 
 
-since my dataset was so large i didnt pudh it to my git
+since my dataset was so large i didnt push it to my git
