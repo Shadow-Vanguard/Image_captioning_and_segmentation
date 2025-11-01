@@ -1,0 +1,22 @@
+torch>=2.2
+torchvision>=0.17
+numpy>=1.26
+pillow>=10.0
+opencv-python>=4.8
+tqdm>=4.66
+nltk>=3.8
+transformers>=4.43
+streamlit>=1.36
+matplotlib>=3.8
+flask>=3.0
+ultralytics
+fastapi
+uvicorn
+python-multipart
+itsdangerous
+
+#.\venv\Scripts\Activate.ps1; python app.py
+
+#if shows error in installing requirements
+#python -m pip install --upgrade pip setuptools wheel
+

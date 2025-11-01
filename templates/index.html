@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Captioning & Segmentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .logout-button {
+            background: linear-gradient(90deg, #ff6b6b, #ee4c4c);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-decoration: none;
+        }
+
+        .logout-button:hover {
+            background: linear-gradient(90deg, #ee4c4c, #ff6b6b);
+        }
+
+        form {
+            margin: 20px 0;
+            background: #ffffffcc;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #764ba2, #667eea);
+        }
+
+        /* Loader */
+        #loader {
+            display: none;
+            margin: 30px auto;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #764ba2;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results Section */
+        #results {
+            display: none;
+            margin-top: 30px;
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .images-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .image-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffffcc;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .image-box:hover {
+            transform: scale(1.05);
+        }
+
+        .image-box img {
+            max-width: 400px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+
+        .caption, .detections {
+            background: #ffffffcc;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .caption strong, .detections strong {
+            color: #764ba2;
+        }
+
+        .detections ul {
+            padding-left: 20px;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/logout" class="logout-button">Logout</a>
+
+    <h1>Image Captioning & Segmentation</h1>
+
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required />
+        <button type="submit">Process</button>
+    </form>
+
+    <!-- Loader -->
+    <div id="loader"></div>
+
+    <!-- Results Section -->
+    <div id="results" class="fade-in">
+        <div class="images-container">
+            <div class="image-box">
+                <h2>Original Image</h2>
+                <img src="{{ original_image }}" alt="Original">
+            </div>
+            <div class="image-box">
+                <h2>Segmented Image</h2>
+                <img src="{{ segmented_image }}" alt="Segmented">
+            </div>
+        </div>
+
+        <div class="caption">
+            <strong>Caption:</strong> {{ caption }}
+        </div>
+
+        <div class="detections">
+            <strong>Detected Objects:</strong>
+            <ul>
+                {% for det in detections %}
+                    <li>{{ det }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle form submit -->
+    <script>
+        const form = document.getElementById('uploadForm');
+        const results = document.getElementById('results');
+        const loader = document.getElementById('loader');
+
+        form.addEventListener('submit', (e) => {
+            // Show loader and hide previous results
+            results.style.display = 'none';
+            loader.style.display = 'block';
+        });
+
+        // Optional: hide loader and show results after page reload
+        window.addEventListener('DOMContentLoaded', () => {
+            const originalImg = "{{ original_image }}";
+            if (originalImg && originalImg !== "None") {
+                loader.style.display = 'none';
+                results.style.display = 'block';
+            }
+        });
+    </script>
+
+</body>
+</html>
